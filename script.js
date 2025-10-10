@@ -1,7 +1,7 @@
 // === Fredagsfrågesport med Open Trivia DB ===
 // Hämtar en ny fråga varje fredag
 
-const API_URL = "https://opentdb.com/api.php?amount=1&category=11&difficulty=easy&type=multiple";
+const API_URL = "https://opentdb.com/api.php?amount=12&category=11&difficulty=easy&type=multiple";
 let dagensFraga = null;
 let harSvarat = false;
 
