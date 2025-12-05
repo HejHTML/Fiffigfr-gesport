@@ -91,7 +91,8 @@ function visaFraga() {
     const btn = document.createElement("button");
     btn.textContent = option;
     btn.className = "option-btn";
-    btn.addEventListener("click", () => kontrolleraSvar(btn, option));
+  btn.addEventListener("click", () => kontrolleraSvar(btn, btn.textContent));
+
     optionsBox.appendChild(btn);
   });
 }
