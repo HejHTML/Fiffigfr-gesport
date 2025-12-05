@@ -11,7 +11,7 @@ h1 {
   margin: 0 auto 30px auto; /* topp, vänster/höger auto, botten */
   font-size: 50px;
   text-shadow: 2px 2px #ff0000;
-  max-width: 300px;
+  max-width: 100%;
   text-align: center; /* försäkrar att texten är centrerad inom h1 */
 }
 
