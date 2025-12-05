@@ -8,12 +8,13 @@ body {
 
 h1 {
   color: #ffcc00;
-  margin-bottom: 30px;
+  margin: 0 auto 30px auto; /* topp, vänster/höger auto, botten */
   font-size: 30px;
-  text-align: center;
   text-shadow: 2px 2px #ff0000;
-  max-width:300px;
+  max-width: 300px;
+  text-align: center; /* försäkrar att texten är centrerad inom h1 */
 }
+
 
 .quiz-box {
   background: #DE5A3E;
