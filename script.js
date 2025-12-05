@@ -65,6 +65,4 @@ quizBox.innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>
 hamtaVeckansFragor();
 }
 });
-</script>
-</body>
-</html>
+
