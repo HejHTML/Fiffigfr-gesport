@@ -10,6 +10,7 @@ h1 {
   color: #ffcc00;
   margin-bottom: 30px;
   font-size: 30px;
+  text-align: center;
   text-shadow: 2px 2px #ff0000;
   max-width:300px;
 }
