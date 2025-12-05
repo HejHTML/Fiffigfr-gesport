@@ -35,6 +35,7 @@ h1 {
   color: #000;
   border: none;
   border-radius: 10px;
+  shadow-box: 5px;
   padding: 12px;
   font-size: 1rem;
   margin: 10px 0;
