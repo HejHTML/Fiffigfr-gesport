@@ -23,9 +23,10 @@ h1 {
 }
 
 #question {
-  font-size: 1.3rem;
+  font-size: 25px;
   margin-bottom: 25px;
   color: #ffffff;
+   text-shadow: 2px 2px #ff0000;
 }
 
 /* Knappar för svarsalternativ */
