@@ -21,7 +21,7 @@ function getWeekNumber(date) {
   return Math.ceil(dayNum / 7);
 }
 
-// === Hämta veckans 5 frågor (samma hela veckan) ===
+// === Hämta veckans 5 frågor ===
 async function hamtaVeckansFragor() {
   const today = new Date();
   const weekNumber = getWeekNumber(today);
@@ -46,7 +46,8 @@ async function hamtaVeckansFragor() {
       .sort(() => Math.random() - 0.5)
       .slice(0, 5)
       .map(fraga => {
-        const blandade = [...fraga.incorrect_answers, fraga.correct_answer].sort(() => Math.random() - 0.5);
+        const blandade = [...fraga.incorrect_answers, fraga.correct_answer]
+          .sort(() => Math.random() - 0.5);
 
         return {
           question: decodeHTML(fraga.question),
@@ -61,8 +62,8 @@ async function hamtaVeckansFragor() {
 
     visaFraga();
   } catch (err) {
-    console.error("Fel vid hämtning av frågor:", err);
-    questionBox.textContent = "Ett fel uppstod vid hämtning av frågorna.";
+    console.error("Fel:", err);
+    questionBox.textContent = "Fel vid hämtning av frågorna.";
   }
 }
 
@@ -73,12 +74,13 @@ function decodeHTML(str) {
   return txt.value;
 }
 
-// === Visa aktuell fråga ===
+// === Visa fråga ===
 function visaFraga() {
   if (!veckansFragor.length) return;
 
   const fraga = veckansFragor[aktuellIndex];
-  questionBox.textContent = `Fråga ${aktuellIndex + 1} av 5:\n${fraga.question}`;
+
+  questionBox.textContent = `Fråga ${aktuellIndex + 1} av 5: ${fraga.question}`;
   optionsBox.innerHTML = "";
   result.textContent = "";
   harSvarat = false;
@@ -101,7 +103,6 @@ function kontrolleraSvar(btn, val) {
 
   const fraga = veckansFragor[aktuellIndex];
   const knappar = document.querySelectorAll(".option-btn");
-
   knappar.forEach(k => k.disabled = true);
 
   if (val === fraga.answer) {
@@ -122,12 +123,9 @@ function kontrolleraSvar(btn, val) {
     if (aktuellIndex < 5) {
       visaFraga();
     } else {
-      questionBox.textContent = "🎉 Klart! Du har gjort alla 5 fredagsfrågor!";
+      questionBox.textContent = "🎉 Klart! Du har gjort alla 5 fredagsfrågorna!";
       optionsBox.innerHTML = "";
-
-      if (poang === 5) {
-        startConfetti();
-      }
+      if (poang === 5) startConfetti();
     }
   }, 1500);
 }
@@ -139,14 +137,12 @@ function startConfetti() {
 
   (function frame() {
     confetti({ particleCount: 5, spread: 60 });
-    if (Date.now() < end) {
-      requestAnimationFrame(frame);
-    }
+    if (Date.now() < end) requestAnimationFrame(frame);
   })();
 }
 
-// === Visa endast på fredagar ===
-const idag = new Date().getDay(); // 5 = fredag
+// === Visa endast fredag ===
+const idag = new Date().getDay();
 if (idag !== 5) {
   document.querySelector(".quiz-box").innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>";
 } else {
