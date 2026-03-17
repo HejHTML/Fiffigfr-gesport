@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const lagrade = JSON.parse(localStorage.getItem("fredagsQuiz"));
-      if (lagrade && lagrade.week === weekNumber && Array.isArray(lagrade.data) && lagrade.data.length === 5) {
+      if (lagrade && lagrade.week === weekNumber && Array.isArray(lagrade.data) && lagrade.data.length === 2) {
         veckansFragor = lagrade.data;
         aktuellIndex = 0;
         poang = 0;
