@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let poang = 0;
   let harSvarat = false;
 
+  // --- Hjälpfunktioner ---
   function decodeHTML(str) {
     const txt = document.createElement("textarea");
     txt.innerHTML = str;
@@ -25,38 +26,24 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.ceil(dayNum / 7);
   }
 
+  // --- Hämta och normalisera frågor ---
   async function fetchRandomQuestion(apiChoice) {
     try {
-      if (apiChoice === "API1") {
-        const res = await fetch(API1_URL);
-        const data = await res.json();
-        if (!data.results || data.results.length === 0) return null;
-        return normalizeQuestion(data.results[0], "API1");
-      } else {
-        const res = await fetch(API2_URL);
-        const data = await res.json();
-        return normalizeQuestion(data, "API2");
-      }
+      const url = apiChoice === "API1" ? API1_URL : API2_URL;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!data.results || data.results.length === 0) return null;
+
+      const q = data.results[0]; // alltid första frågan
+      return {
+        question: decodeHTML(q.question),
+        options: [...q.incorrect_answers.map(decodeHTML), decodeHTML(q.correct_answer)].sort(() => Math.random() - 0.5),
+        answer: decodeHTML(q.correct_answer)
+      };
     } catch (err) {
       console.error("Fel vid hämtning av fråga:", err);
       return null;
-    }
-  }
-
-  function normalizeQuestion(apiQuestion, source) {
-    if (source === "API1") {
-      return {
-        question: decodeHTML(apiQuestion.question),
-        options: [...apiQuestion.incorrect_answers.map(decodeHTML), decodeHTML(apiQuestion.correct_answer)]
-          .sort(() => Math.random() - 0.5),
-        answer: decodeHTML(apiQuestion.correct_answer)
-      };
-    } else if (source === "API2") {
-      return {
-        question: apiQuestion.text,
-        options: apiQuestion.options.sort(() => Math.random() - 0.5),
-        answer: apiQuestion.answer
-      };
     }
   }
 
@@ -74,9 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {}
 
+    // Hämta 5 frågor varannan API
     veckansFragor = [];
     while (veckansFragor.length < 5) {
-      const apiChoice = veckansFragor.length % 2 === 0 ? "API1" : "API2"; // växla API
+      const apiChoice = veckansFragor.length % 2 === 0 ? "API1" : "API2";
       const fraga = await fetchRandomQuestion(apiChoice);
       if (fraga) veckansFragor.push(fraga);
     }
@@ -87,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     visaFraga();
   }
 
+  // --- Visa fråga ---
   function visaFraga() {
     if (aktuellIndex >= veckansFragor.length) return visaSlut();
     harSvarat = false;
@@ -106,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Kontrollera svar ---
   function kontrolleraSvar(btn, val) {
     if (harSvarat) return;
     harSvarat = true;
@@ -134,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
+  // --- Visa slutpoäng ---
   function visaSlut() {
     questionBox.textContent = "🎉 Klart! Du har gjort alla 5 fredagsfrågorna!";
     optionsBox.innerHTML = "";
@@ -141,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (poang === veckansFragor.length && typeof confetti === "function") startConfetti();
   }
 
+  // --- Confetti ---
   function startConfetti() {
     const duration = 3000;
     const end = Date.now() + duration;
@@ -149,11 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
   }
-// Visa bara fredag
+
+  // --- Kör bara fredag ---
   if (new Date().getDay() !== 5) {
     quizBox.innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>";
   } else {
     hamtaVeckansFragor();
   }
-  
 });
