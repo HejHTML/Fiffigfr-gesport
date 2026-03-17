@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "https://opentdb.com/api.php?amount=5&category=14&difficulty=easy&type=multiple";
+  const API1_URL = "https://opentdb.com/api.php?amount=5&category=12&difficulty=easy&type=multiple";
+  const API2_URL = "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple";
   const questionBox = document.getElementById("question");
   const optionsBox = document.getElementById("options");
   const result = document.getElementById("result");
@@ -24,6 +25,41 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.ceil(dayNum / 7);
   }
 
+  async function fetchRandomQuestion(apiChoice) {
+    try {
+      if (apiChoice === "API1") {
+        const res = await fetch(API1_URL);
+        const data = await res.json();
+        if (!data.results || data.results.length === 0) return null;
+        return normalizeQuestion(data.results[0], "API1");
+      } else {
+        const res = await fetch(API2_URL);
+        const data = await res.json();
+        return normalizeQuestion(data, "API2");
+      }
+    } catch (err) {
+      console.error("Fel vid hämtning av fråga:", err);
+      return null;
+    }
+  }
+
+  function normalizeQuestion(apiQuestion, source) {
+    if (source === "API1") {
+      return {
+        question: decodeHTML(apiQuestion.question),
+        options: [...apiQuestion.incorrect_answers.map(decodeHTML), decodeHTML(apiQuestion.correct_answer)]
+          .sort(() => Math.random() - 0.5),
+        answer: decodeHTML(apiQuestion.correct_answer)
+      };
+    } else if (source === "API2") {
+      return {
+        question: apiQuestion.text,
+        options: apiQuestion.options.sort(() => Math.random() - 0.5),
+        answer: apiQuestion.answer
+      };
+    }
+  }
+
   async function hamtaVeckansFragor() {
     const weekNumber = getWeekNumber(new Date());
 
@@ -38,34 +74,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {}
 
-    try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      if (!data.results || data.results.length === 0) {
-        questionBox.textContent = "Kunde inte hämta frågor just nu.";
-        return;
-      }
-
-      veckansFragor = data.results
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 5)
-        .map(q => {
-          const allOptions = [...q.incorrect_answers, q.correct_answer].map(decodeHTML);
-          return {
-            question: decodeHTML(q.question),
-            options: allOptions.sort(() => Math.random() - 0.5),
-            answer: decodeHTML(q.correct_answer)
-          };
-        });
-
-      localStorage.setItem("fredagsQuiz", JSON.stringify({ week: weekNumber, data: veckansFragor }));
-      aktuellIndex = 0;
-      poang = 0;
-      visaFraga();
-    } catch (err) {
-      console.error("Fel vid hämtning av frågor:", err);
-      questionBox.textContent = "Fel vid hämtning av frågorna.";
+    veckansFragor = [];
+    while (veckansFragor.length < 5) {
+      const apiChoice = veckansFragor.length % 2 === 0 ? "API1" : "API2"; // växla API
+      const fraga = await fetchRandomQuestion(apiChoice);
+      if (fraga) veckansFragor.push(fraga);
     }
+
+    localStorage.setItem("fredagsQuiz", JSON.stringify({ week: weekNumber, data: veckansFragor }));
+    aktuellIndex = 0;
+    poang = 0;
+    visaFraga();
   }
 
   function visaFraga() {
