@@ -150,10 +150,5 @@ document.addEventListener("DOMContentLoaded", () => {
     })();
   }
 
-  // Visa bara fredag
-  if (new Date().getDay() !== 2) {
-    quizBox.innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>";
-  } else {
-    hamtaVeckansFragor();
-  }
+  
 });
