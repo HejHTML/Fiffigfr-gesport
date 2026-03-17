@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const lagrade = JSON.parse(localStorage.getItem("fredagsQuiz"));
-      if (lagrade && lagrade.week === weekNumber && Array.isArray(lagrade.data) && lagrade.data.length === 2) {
+      if (lagrade && lagrade.week === weekNumber && Array.isArray(lagrade.data) && lagrade.data.length === 5) {
         veckansFragor = lagrade.data;
         aktuellIndex = 0;
         poang = 0;
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Visa bara fredag
-  if (new Date().getDay() !== 5) {
+  if (new Date().getDay() !== 2) {
     quizBox.innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>";
   } else {
     hamtaVeckansFragor();
