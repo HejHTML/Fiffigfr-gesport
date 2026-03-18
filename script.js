@@ -141,5 +141,5 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
   }
-  
+  hamtaVeckansFragor();
 });
