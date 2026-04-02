@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
   }
-if (new Date().getDay() !== 4) {
+if (new Date().getDay() !== 5) {
   quizBox.innerHTML = "<p>Kom tillbaka på fredag för veckans 5 frågor! 📅</p>";
 } else {
   hamtaVeckansFragor();
